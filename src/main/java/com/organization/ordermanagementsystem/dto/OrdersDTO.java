@@ -25,6 +25,7 @@ public class OrdersDTO {
     private Date orderDate;
     private Integer orderTotal;
     private Integer productPrice;
+    private String customerType;
     private Date paymentDate;
     private Date createdAt;
     private Date updatedAt;

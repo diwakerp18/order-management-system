@@ -2,7 +2,9 @@ package com.organization.ordermanagementsystem.service;
 
 import com.organization.ordermanagementsystem.converter.CustomerTypeDtoToEntity;
 import com.organization.ordermanagementsystem.converter.CustomerTypeEntityToDto;
+import com.organization.ordermanagementsystem.dto.CustomerDTO;
 import com.organization.ordermanagementsystem.dto.CustomerTypeDTO;
+import com.organization.ordermanagementsystem.entity.Customer;
 import com.organization.ordermanagementsystem.entity.CustomerType;
 import com.organization.ordermanagementsystem.exception.OrderManagementServiceException;
 import com.organization.ordermanagementsystem.helper.consts.CustomerTypeConstants;
@@ -53,5 +55,17 @@ public class CustomerTypeService {
 
         return customerType;
     }
+
+    public CustomerTypeDTO getCustomerTypeById(Long id) throws Exception {
+        log.info("searching for customer type with id :"+ id);
+        CustomerType customerType = customerTypeRepo.findByIdAndAndDeletedFalse(id);
+        if (isNull(customerType)){
+            throw new OrderManagementServiceException("No Customer Type Found With id :"+ id);
+        }
+
+        CustomerTypeDTO customerTypeDTO = customerTypeEntityToDto.entityToDto(customerType);
+        return customerTypeDTO;
+    }
+
 
 }

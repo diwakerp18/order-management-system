@@ -22,7 +22,7 @@ public class CustomerDTO {
   private String name;
   private String email;
   private String contactNumber;
-  private Integer customerType;
+  private Long customerType;
   private Boolean deleted;
   private Date createdAt;
   private Date updatedAt;

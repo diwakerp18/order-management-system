@@ -19,6 +19,7 @@ public class OrdersDtoToEntity {
             .deliveryCharge(ordersDTO.getDeliveryCharge())
             .discountAmmount(ordersDTO.getDiscountAmount())
             .productPrice(ordersDTO.getProductPrice())
+            .customerType(ordersDTO.getCustomerType())
             .deleted(ordersDTO.getDeleted())
             .build();
 

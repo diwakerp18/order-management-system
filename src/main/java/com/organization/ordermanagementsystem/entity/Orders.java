@@ -31,6 +31,9 @@ public class Orders {
   @Column(name = "CustomerName")
   private String customerName;
 
+  @Column(name = "CustomerType")
+  private String customerType;
+
   @Column(name = "DeliveryAddress")
   private String deliveryAddress;
 

@@ -4,6 +4,7 @@ package com.organization.ordermanagementsystem.service;
 import com.organization.ordermanagementsystem.converter.OrdersDtoToEntity;
 import com.organization.ordermanagementsystem.converter.OrdersEntityToDto;
 import com.organization.ordermanagementsystem.dto.CustomerDTO;
+import com.organization.ordermanagementsystem.dto.CustomerTypeDTO;
 import com.organization.ordermanagementsystem.dto.OrdersDTO;
 import com.organization.ordermanagementsystem.entity.Orders;
 import com.organization.ordermanagementsystem.exception.OrderManagementServiceException;
@@ -25,6 +26,8 @@ public class OrdersService {
     @Autowired
     OrdersRepo ordersRepo;
     @Autowired
+    CustomerTypeService customerTypeService;
+    @Autowired
     CustomerService customerService;
     @Autowired
     OrdersDtoToEntity ordersDtoToEntity;
@@ -37,14 +40,13 @@ public class OrdersService {
         checkForNullInputs(ordersDTO);
         ordersDTO.setDeliveryCharge(OrdersConstants.DELIVERY_CHARGE);
         ordersDTO.setDeleted(OrdersConstants.DEFAULT_DELETED);
-        ordersDTO.setCustomerName(customerService.getCustomerById(ordersDTO.getCustomerId()).getName());
 
         List<Orders> ordersList = ordersRepo.findByCustomerIdAndDeletedFalse(ordersDTO.getCustomerId());
         Integer countOfOrders = ordersList.size();
         CustomerDTO customerDTO = new CustomerDTO();
         Integer effectiveAmount = ordersDTO.getDeliveryCharge() + ordersDTO.getProductPrice();
         if (!ordersList.isEmpty() && countOfOrders > 9){
-            if (countOfOrders > 9 && countOfOrders < 20){
+            if (countOfOrders < 20){
                 if (countOfOrders == 10){
                     customerDTO.setCustomerType(OrdersConstants.GOLD_CUSTOMER_TYPE);
                     customerDTO.setId(ordersDTO.getCustomerId());
@@ -69,6 +71,12 @@ public class OrdersService {
             ordersDTO.setDiscountAmount(OrdersConstants.DEFAULT_DISCOUNT_AMOUNT);
             ordersDTO.setOrderTotal(effectiveAmount - ordersDTO.getDiscountAmount());
         }
+
+        CustomerDTO customer = customerService.getCustomerById(ordersDTO.getCustomerId());
+        ordersDTO.setCustomerName(customer.getName());
+
+        CustomerTypeDTO customerType = customerTypeService.getCustomerTypeById(customer.getCustomerType());
+        ordersDTO.setCustomerType(customerType.getType());
 
         Orders orders = getEntityToSave(ordersDTO);
         ordersRepo.save(orders);

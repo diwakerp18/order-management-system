@@ -33,6 +33,7 @@ public class OrdersEntityToDto {
         .deleted(orders.getDeleted())
         .productPrice(orders.getProductPrice())
         .discountAmount(orders.getDiscountAmmount())
+        .customerType(orders.getCustomerType())
         .createdAt(orders.getCreatedAt())
         .build();
     }
