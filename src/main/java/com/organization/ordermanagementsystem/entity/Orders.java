@@ -25,6 +25,9 @@ public class Orders {
   @Column(name = "CustomerId")
   private Long customerId;
 
+  @Column(name = "ProductPrice")
+  private Integer productPrice;
+
   @Column(name = "CustomerName")
   private String customerName;
 
@@ -34,17 +37,14 @@ public class Orders {
   @Column(name = "OrderDate")
   private Date orderDate;
 
-  @Column(name = "DeliveryDate")
-  private Date deliveryDate;
-
   @Column(name = "DeliveryCharge")
-  private BigDecimal deliveryCharge;
+  private Integer deliveryCharge;
 
   @Column(name = "DiscountAmmount")
-  private BigDecimal discountAmmount;
+  private Integer discountAmmount;
 
   @Column(name = "OrderTotal")
-  private BigDecimal orderTotal;
+  private Integer orderTotal;
 
   @Column(name = "PaymentDate")
   private Date paymentDate;
