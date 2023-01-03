@@ -1,4 +1,4 @@
-package com.organization.record.helper.consts;
+package com.organization.ordermanagementsystem.helper.consts;
 
 public class HeaderConstants {
     public static final String ORGANIZATION_REQUEST_ID = "x-organization-request-id";

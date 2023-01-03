@@ -1,7 +1,7 @@
 package com.organization.ordermanagementsystem.exception.handler;
 
 import com.organization.ordermanagementsystem.exception.OrderManagementServiceException;
-import com.organization.record.helper.response.ApiResponse;
+import com.organization.ordermanagementsystem.helper.response.ApiResponse;
 import io.swagger.codegen.v3.service.exception.BadRequestException;
 import lombok.extern.slf4j.Slf4j;
 import com.organization.ordermanagementsystem.exception.ApplicationException;

@@ -33,12 +33,6 @@ public class CustomerType {
   @Column(name = "UpdatedAt")
   private Date updatedAt;
 
-  @Column(name = "UpdatedBy")
-  private Long updatedBy;
-
-  @Column(name = "CreatedBy")
-  private Long createdBy;
-
   public CustomerType() {
 
   }

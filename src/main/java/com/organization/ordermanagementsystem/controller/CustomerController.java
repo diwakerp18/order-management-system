@@ -3,6 +3,7 @@ package com.organization.ordermanagementsystem.controller;
 import static java.util.Objects.isNull;
 
 import com.organization.ordermanagementsystem.dto.CustomerDTO;
+import com.organization.ordermanagementsystem.entity.Customer;
 import com.organization.ordermanagementsystem.exception.OrderManagementServiceException;
 import com.organization.ordermanagementsystem.service.CustomerService;
 import java.util.List;
@@ -35,13 +36,13 @@ public class CustomerController {
 
   // create Customer
   @PostMapping("/create")
-  public ResponseEntity<OrderManagementServiceException> createCustomer(@Valid @RequestBody CustomerDTO customerDTO) throws  Exception {
+  public CustomerDTO createCustomer(@Valid @RequestBody CustomerDTO customerDTO) throws  Exception {
     CustomerDTO retVal = customerService.createCustomer(customerDTO);
     if (isNull(retVal)){
       throw new OrderManagementServiceException("Customer Creation failed");
     }
 
-    return ResponseEntity.ok(new OrderManagementServiceException("Sucessfully Created Customer"));
+    return retVal;
   }
 
   // get customer by id
@@ -56,17 +57,17 @@ public class CustomerController {
 
   // update customer record
   @PostMapping("/update/{id}")
-  public ResponseEntity<OrderManagementServiceException> updateStudent(@PathVariable Long id, @Valid @RequestBody StudentRecordDto studentRecordDto) throws  Exception {
+  public Customer updateCustomer(@PathVariable Long id, @Valid @RequestBody CustomerDTO customerDTO) throws  Exception {
     if (isNull(id) || id <= 0){
-      throw new OrganizationServiceException("Student Id should be a positive value");
+      throw new OrderManagementServiceException("Customer Id should be a positive value");
     }
-    studentRecordDto.setId(id);
+    customerDTO.setId(id);
 
-    StudentRecord retVal = studentRecordService.updateStudentRecord(studentRecordDto);
+    Customer retVal = customerService.updateCustomerRecord(customerDTO);
     if (isNull(retVal)){
-      throw new OrganizationServiceException("Faild to update student record");
+      throw new OrderManagementServiceException("Faild to update customer record");
     }
-    return ResponseEntity.ok(new OrganizationServiceException("Sucessfully Updated Student Record"));
+    return retVal;
   }
 
   // Hard delete customer

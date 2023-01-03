@@ -31,7 +31,7 @@ public class Customer {
   private String contactNumber;
 
   @Column(name = "CustomerType")
-  private String customerType;
+  private Integer customerType;
 
   @Column(name = "Deleted")
   private Boolean deleted;

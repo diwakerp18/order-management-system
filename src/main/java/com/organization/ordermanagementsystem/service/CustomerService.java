@@ -1,6 +1,7 @@
 package com.organization.ordermanagementsystem.service;
 
 import com.organization.ordermanagementsystem.converter.CustomerDtoToEntity;
+import com.organization.ordermanagementsystem.converter.CustomerDtoToExistingEntity;
 import com.organization.ordermanagementsystem.converter.CustomerEntityToDto;
 import com.organization.ordermanagementsystem.dto.CustomerDTO;
 import com.organization.ordermanagementsystem.entity.Customer;
@@ -25,6 +26,8 @@ public class CustomerService {
   CustomerDtoToEntity customerDtoToEntity;
   @Autowired
   CustomerEntityToDto customerEntityToDto;
+  @Autowired
+  CustomerDtoToExistingEntity customerDtoToExistingEntity;
 
   public List<CustomerDTO> getCustomers() throws Exception {
     log.info("Fetching All Customer Records");
@@ -41,7 +44,7 @@ public class CustomerService {
     log.info("creating new customer record");
     checkForNullInputs(customerDTO);
 
-    Customer existingCustomer = getCustomerForContact(customerDTO.getContactNumber());
+    Customer existingCustomer = customerRepo.findByContactNumberAndDeletedFalse(customerDTO.getContactNumber());
     if (!isNull(existingCustomer)) {
       throw new OrderManagementServiceException("An Customer Already Exists for contactNumber : "+ customerDTO.getContactNumber());
     }
@@ -65,18 +68,19 @@ public class CustomerService {
     return customerDTO;
   }
 
-  public Customer updateStudentRecord(StudentRecordDto studentRecordDto) throws Exception {
-    log.info("searching for student with id :"+ studentRecordDto.getId());
-    checkForEmptyInputs(studentRecordDto);
-
-    StudentRecord existingStudentRecord = studentRecordRepo.findByIdAndAndDeletedFalse(studentRecordDto.getId());
-    if (isNull(existingStudentRecord)){
-      throw new OrganizationServiceException("No Record Found For Id :"+ studentRecordDto.getId());
+  public Customer updateCustomerRecord(CustomerDTO customerDTO) throws Exception {
+    if (isNull(customerDTO)){
+      throw new OrderManagementServiceException("Input Can`t be null");
     }
 
-    setDefaultValues(studentRecordDto);
-    studentRecordDtoToExistingEntityConverter.dtoToExistingEntity(existingStudentRecord, studentRecordDto);
-    return studentRecordRepo.save(existingStudentRecord);
+    log.info("searching for customer with id :"+ customerDTO.getId());
+    Customer existingRecord = customerRepo.findByIdAndAndDeletedFalse(customerDTO.getId());
+    if (isNull(existingRecord)){
+      throw new OrderManagementServiceException("No Record Found For Id :"+ customerDTO.getId());
+    }
+    customerDtoToExistingEntity.dtoToExistingEntity(existingRecord, customerDTO);
+
+    return customerRepo.save(existingRecord);
   }
 
   public Customer hardDeleteCustomer(Long id) throws Exception {
@@ -111,47 +115,6 @@ public class CustomerService {
     return customer;
   }
 
-  public Customer getCustomerForContact(String contactNumber) throws Exception {
-
-    if (isNull(contactNumber)){
-      throw new OrderManagementServiceException("Contact Number Can`t Be Empty");
-    }
-
-    log.info("Searching for customer details with contactNumber : " + contactNumber);
-    Customer customer = customerRepo.findByContactNumberAndDeletedFalse(contactNumber);
-
-    return customer;
-  }
-
-  public List<StudentRecordDto> getStudentsWithFilters(String branch, String batch, String role) throws Exception {
-    getVerified(branch, batch, role);
-    log.info("Fetching All Students Records With Branch {}, Batch {}, And Role {} ", branch, batch, role);
-    List<StudentRecord> studentRecords = studentRecordRepo.findByBranchAndBatchAndAndRoleAndDeletedFalse(branch, batch, role);
-    if (studentRecords.isEmpty()){
-      throw new OrganizationServiceException("Not A Single Record Found");
-    }
-
-    List<StudentRecordDto> studentRecordDtos = studentRecordEntityToDtoConverter.entityToDto(studentRecords);
-    return studentRecordDtos;
-  }
-
-  private void getVerified(String branch, String batch, String role) throws Exception {
-    if (isNull(branch)){
-      throw new OrganizationServiceException("branch can`t` be empty");
-    }
-    branchService.verifyBranch(branch);
-
-    if (isNull(batch)){
-      throw new OrganizationServiceException("batch can`t` be empty");
-    }
-    batchService.verifyBatch(batch);
-
-    if (isNull(role)){
-      throw new OrganizationServiceException("role can`t` be empty");
-    }
-    roleService.verifyRole(role);
-  }
-
   private void setDefaultValues(CustomerDTO customerDTO) {
 
     if (isNull(customerDTO.getDeleted())){
@@ -177,31 +140,6 @@ public class CustomerService {
       throw new OrderManagementServiceException("Email Id Can`t be empty");
     }
 
-  }
-
-  private void checkForEmptyInputs(StudentRecordDto studentRecordDto) {
-
-    if(studentRecordDto.getStudentName().isEmpty()){
-      throw new OrganizationServiceException("Student Name Can`t be empty");
-    }
-    if (studentRecordDto.getCollegeName().isEmpty()){
-      throw new OrganizationServiceException("College Name Can`t be empty");
-    }
-    if (studentRecordDto.getEmailId().isEmpty()){
-      throw new OrganizationServiceException("Email Id Can`t be empty");
-    }
-    if (isNull(studentRecordDto.getPhoneNumber())){
-      throw new OrganizationServiceException("Phone Number Can`t be empty");
-    }
-    if (studentRecordDto.getBatch().isEmpty()){
-      throw new OrganizationServiceException("Batch Can`t be empty");
-    }
-    if (studentRecordDto.getBranch().isEmpty()){
-      throw new OrganizationServiceException("Branch Can`t be empty");
-    }
-    if (isNull(studentRecordDto.getRollNumber())){
-      throw new OrganizationServiceException("Roll Number Can`t be empty");
-    }
   }
 
 }

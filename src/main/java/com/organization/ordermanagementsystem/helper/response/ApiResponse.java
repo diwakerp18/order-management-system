@@ -1,7 +1,7 @@
-package com.organization.record.helper.response;
+package com.organization.ordermanagementsystem.helper.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.organization.record.helper.consts.HeaderConstants;
+import com.organization.ordermanagementsystem.helper.consts.HeaderConstants;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
